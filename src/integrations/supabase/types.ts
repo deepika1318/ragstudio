@@ -14,13 +14,202 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      benchmark_items: {
+        Row: {
+          created_at: string
+          expected_answer: string | null
+          expected_document_ids: string[]
+          expected_keywords: string[]
+          id: string
+          question: string
+        }
+        Insert: {
+          created_at?: string
+          expected_answer?: string | null
+          expected_document_ids?: string[]
+          expected_keywords?: string[]
+          id?: string
+          question: string
+        }
+        Update: {
+          created_at?: string
+          expected_answer?: string | null
+          expected_document_ids?: string[]
+          expected_keywords?: string[]
+          id?: string
+          question?: string
+        }
+        Relationships: []
+      }
+      chunks: {
+        Row: {
+          chunk_index: number
+          content: string
+          created_at: string
+          document_id: string
+          embedding: string | null
+          id: string
+          page: number | null
+          token_estimate: number
+        }
+        Insert: {
+          chunk_index: number
+          content: string
+          created_at?: string
+          document_id: string
+          embedding?: string | null
+          id?: string
+          page?: number | null
+          token_estimate?: number
+        }
+        Update: {
+          chunk_index?: number
+          content?: string
+          created_at?: string
+          document_id?: string
+          embedding?: string | null
+          id?: string
+          page?: number | null
+          token_estimate?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chunks_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documents: {
+        Row: {
+          char_count: number
+          chunk_count: number
+          created_at: string
+          error: string | null
+          file_size: number
+          file_type: string
+          filename: string
+          id: string
+          page_count: number
+          status: string
+        }
+        Insert: {
+          char_count?: number
+          chunk_count?: number
+          created_at?: string
+          error?: string | null
+          file_size?: number
+          file_type: string
+          filename: string
+          id?: string
+          page_count?: number
+          status?: string
+        }
+        Update: {
+          char_count?: number
+          chunk_count?: number
+          created_at?: string
+          error?: string | null
+          file_size?: number
+          file_type?: string
+          filename?: string
+          id?: string
+          page_count?: number
+          status?: string
+        }
+        Relationships: []
+      }
+      eval_runs: {
+        Row: {
+          created_at: string
+          id: string
+          metrics: Json
+          mode: string
+          per_item: Json
+          top_k: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metrics?: Json
+          mode: string
+          per_item?: Json
+          top_k?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metrics?: Json
+          mode?: string
+          per_item?: Json
+          top_k?: number
+        }
+        Relationships: []
+      }
+      queries: {
+        Row: {
+          answer: string | null
+          citations: Json
+          created_at: string
+          id: string
+          insufficient: boolean
+          latency_ms: number
+          mode: string
+          question: string
+          results: Json
+          top_k: number
+        }
+        Insert: {
+          answer?: string | null
+          citations?: Json
+          created_at?: string
+          id?: string
+          insufficient?: boolean
+          latency_ms?: number
+          mode: string
+          question: string
+          results?: Json
+          top_k?: number
+        }
+        Update: {
+          answer?: string | null
+          citations?: Json
+          created_at?: string
+          id?: string
+          insufficient?: boolean
+          latency_ms?: number
+          mode?: string
+          question?: string
+          results?: Json
+          top_k?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      bm25_stats: {
+        Args: never
+        Returns: {
+          avg_len: number
+          total_docs: number
+        }[]
+      }
+      match_chunks: {
+        Args: { match_count: number; query_embedding: string }
+        Returns: {
+          chunk_index: number
+          content: string
+          document_id: string
+          id: string
+          page: number
+          similarity: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
