@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import type { EvalItem, EvalMetrics } from "./rag/types";
 
 const IngestInput = z.object({
   filename: z.string().min(1),
@@ -162,7 +163,7 @@ export const runEvaluation = createServerFn({ method: "POST" })
     }
 
     const k = data.topK;
-    const perItem: Record<string, unknown>[] = [];
+    const perItem: (EvalItem & { retrieved: unknown })[] = [];
 
     for (const item of items) {
       const expected = new Set(item.expected_document_ids ?? []);
@@ -211,7 +212,7 @@ export const runEvaluation = createServerFn({ method: "POST" })
           page: c.page,
           score: c.score,
           relevant: expected.has(c.document_id),
-        })),
+        })) as unknown,
         precision,
         recall,
         f1,
@@ -227,10 +228,10 @@ export const runEvaluation = createServerFn({ method: "POST" })
       });
     }
 
-    const avg = (key: string) =>
+    const avg = (key: keyof EvalItem) =>
       perItem.reduce((sum, item) => sum + (item[key] as number), 0) / perItem.length;
 
-    const metrics = {
+    const metrics: EvalMetrics = {
       k,
       items: perItem.length,
       precisionAtK: avg("precision"),

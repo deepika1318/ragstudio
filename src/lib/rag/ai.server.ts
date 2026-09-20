@@ -116,7 +116,11 @@ export async function generateJson<T>(
   schema: JsonSchema,
   instructions?: string,
 ): Promise<T> {
-  const text = await responsesText(input, { schemaName, schema, instructions });
+  const text = await responsesText(input, {
+    schemaName,
+    schema,
+    ...(instructions ? { instructions } : {}),
+  });
   if (!text) throw new AIError("The model returned an empty response.");
   try {
     return JSON.parse(text) as T;

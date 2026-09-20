@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { runEvaluation } from "@/lib/rag.functions";
 import { benchmarkQuery, documentsQuery, evalRunsQuery } from "@/lib/rag-queries";
-import { MODE_LABELS, type RetrievalMode } from "@/lib/rag/types";
+import { MODE_LABELS, type EvalItem, type EvalMetrics, type RetrievalMode } from "@/lib/rag/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -39,22 +39,8 @@ export const Route = createFileRoute("/evaluation")({
   component: Evaluation,
 });
 
-type Metrics = Record<string, number>;
-type PerItem = {
-  question: string;
-  answer: string;
-  precision: number;
-  recall: number;
-  f1: number;
-  hit: number;
-  rr: number;
-  ndcg: number;
-  citationValidity: number;
-  citationPrecision: number;
-  citationRecall: number;
-  citationF1: number;
-  insufficient: boolean;
-};
+type Metrics = EvalMetrics;
+type PerItem = EvalItem;
 
 const pct = (value: number) => `${(value * 100).toFixed(1)}%`;
 
@@ -292,8 +278,8 @@ function Evaluation() {
                   <span className="font-medium">{MODE_LABELS[item.mode as RetrievalMode]}</span>
                   <span className="font-mono text-muted-foreground">K={item.top_k}</span>
                   <span className="font-mono text-primary">
-                    P {pct(metrics.precisionAtK ?? 0)} · MRR {(metrics.mrr ?? 0).toFixed(3)} ·
-                    cit-F1 {pct(metrics.citationF1 ?? 0)}
+                    P {pct(metrics.precisionAtK)} · MRR {metrics.mrr.toFixed(3)} ·
+                    cit-F1 {pct(metrics.citationF1)}
                   </span>
                   <span className="text-muted-foreground">
                     {new Date(item.created_at).toLocaleString()}
