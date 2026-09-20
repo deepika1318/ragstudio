@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DocumentsRouteImport } from './routes/documents'
+import { Route as EvaluationRouteImport } from './routes/evaluation'
 import { Route as PipelineRouteImport } from './routes/pipeline'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const DocumentsRoute = DocumentsRouteImport.update({
   path: '/documents',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EvaluationRoute = EvaluationRouteImport.update({
+  id: '/evaluation',
+  path: '/evaluation',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PipelineRoute = PipelineRouteImport.update({
   id: '/pipeline',
   path: '/pipeline',
@@ -32,30 +38,34 @@ const PipelineRoute = PipelineRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/documents': typeof DocumentsRoute
+  '/evaluation': typeof EvaluationRoute
   '/pipeline': typeof PipelineRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/documents': typeof DocumentsRoute
+  '/evaluation': typeof EvaluationRoute
   '/pipeline': typeof PipelineRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/documents': typeof DocumentsRoute
+  '/evaluation': typeof EvaluationRoute
   '/pipeline': typeof PipelineRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/documents' | '/pipeline'
+  fullPaths: '/' | '/documents' | '/evaluation' | '/pipeline'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/documents' | '/pipeline'
-  id: '__root__' | '/' | '/documents' | '/pipeline'
+  to: '/' | '/documents' | '/evaluation' | '/pipeline'
+  id: '__root__' | '/' | '/documents' | '/evaluation' | '/pipeline'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DocumentsRoute: typeof DocumentsRoute
+  EvaluationRoute: typeof EvaluationRoute
   PipelineRoute: typeof PipelineRoute
 }
 
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocumentsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/evaluation': {
+      id: '/evaluation'
+      path: '/evaluation'
+      fullPath: '/evaluation'
+      preLoaderRoute: typeof EvaluationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pipeline': {
       id: '/pipeline'
       path: '/pipeline'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DocumentsRoute: DocumentsRoute,
+  EvaluationRoute: EvaluationRoute,
   PipelineRoute: PipelineRoute,
 }
 export const routeTree = rootRouteImport
