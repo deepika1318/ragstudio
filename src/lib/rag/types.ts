@@ -38,3 +38,35 @@ export type Citation = {
   score: number;
   rerank_score: number | null;
 };
+
+export type EvalMetrics = {
+  k: number;
+  items: number;
+  precisionAtK: number;
+  recallAtK: number;
+  f1AtK: number;
+  hitRateAtK: number;
+  mrr: number;
+  reciprocalRank: number;
+  ndcgAtK: number;
+  citationValidity: number;
+  citationPrecision: number;
+  citationRecall: number;
+  citationF1: number;
+};
+
+export type EvalItem = {
+  question: string;
+  answer: string;
+  insufficient: boolean;
+  precision: number;
+  recall: number;
+  f1: number;
+  hit: number;
+  rr: number;
+  ndcg: number;
+  citationValidity: number;
+  citationPrecision: number;
+  citationRecall: number;
+  citationF1: number;
+};

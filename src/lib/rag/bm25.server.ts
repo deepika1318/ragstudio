@@ -42,11 +42,11 @@ export function bm25Search(corpus: Bm25Doc[], query: string, topK: number): Bm25
   const scored: Bm25Hit[] = corpus.map((doc, i) => {
     let score = 0;
     for (const term of queryTerms) {
-      const f = termFreqs[i].get(term);
+      const f = termFreqs[i]?.get(term);
       if (!f) continue;
       const n = docFreq.get(term) ?? 0;
       const idf = Math.log(1 + (N - n + 0.5) / (n + 0.5));
-      score += idf * ((f * (K1 + 1)) / (f + K1 * (1 - B + (B * lengths[i]) / avgLen)));
+      score += idf * ((f * (K1 + 1)) / (f + K1 * (1 - B + (B * (lengths[i] ?? 0)) / avgLen)));
     }
     return { id: doc.id, score };
   });
