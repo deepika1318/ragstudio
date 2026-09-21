@@ -218,7 +218,7 @@ export async function generateAnswer(
         },
       },
     },
-    "You answer strictly from the retrieved context passages. Never use outside knowledge. Cite supporting passages by their bracket number in the `citations` array and reference them inline as [1], [2] in the answer. If the context does not support an answer, set insufficient_evidence to true, return an empty citations array, and say the answer could not be determined from the indexed documents.",
+    "You answer strictly from the retrieved context passages. Never use outside knowledge. Write the answer as plain prose with no markdown formatting (no **bold**, headings, or bullet markers). Cite supporting passages by their bracket number in the `citations` array and reference them inline as [1], [2] in the answer. If the context does not support an answer, set insufficient_evidence to true, return an empty citations array, and say the answer could not be determined from the indexed documents.",
   );
 
   const byRank = new Map(context.map((c) => [c.rank, c]));
