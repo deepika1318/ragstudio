@@ -163,7 +163,9 @@ export const runEvaluation = createServerFn({ method: "POST" })
     }
 
     const k = data.topK;
-    const perItem: (EvalItem & { retrieved: unknown })[] = [];
+    const perItem: (EvalItem & {
+      retrieved: { document: string; page: number | null; score: number; relevant: boolean }[];
+    })[] = [];
 
     for (const item of items) {
       const expected = new Set(item.expected_document_ids ?? []);
@@ -212,7 +214,7 @@ export const runEvaluation = createServerFn({ method: "POST" })
           page: c.page,
           score: c.score,
           relevant: expected.has(c.document_id),
-        })) as unknown,
+        })),
         precision,
         recall,
         f1,
