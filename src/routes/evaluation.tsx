@@ -5,8 +5,7 @@ import { useState } from "react";
 import { Loader2, Play, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-import { supabase } from "@/integrations/supabase/client";
-import { runEvaluation } from "@/lib/rag.functions";
+import { addBenchmarkItem, deleteBenchmarkItem, runEvaluation } from "@/lib/rag.functions";
 import { benchmarkQuery, documentsQuery, evalRunsQuery } from "@/lib/rag-queries";
 import { MODE_LABELS, type EvalItem, type EvalMetrics, type RetrievalMode } from "@/lib/rag/types";
 import { Button } from "@/components/ui/button";
@@ -59,6 +58,8 @@ function Evaluation() {
   const benchmark = useQuery(benchmarkQuery);
   const runs = useQuery(evalRunsQuery);
   const run = useServerFn(runEvaluation);
+  const addBenchmark = useServerFn(addBenchmarkItem);
+  const removeBenchmark = useServerFn(deleteBenchmarkItem);
 
   const [mode, setMode] = useState<RetrievalMode>("hybrid_rerank");
   const [topK, setTopK] = useState(5);
