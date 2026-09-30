@@ -72,10 +72,9 @@ function Evaluation() {
     mutationFn: async () => {
       if (question.trim().length < 5) throw new Error("Enter a benchmark question.");
       if (expectedDocs.length === 0) throw new Error("Select at least one expected document.");
-      const { error } = await supabase
-        .from("benchmark_items")
-        .insert({ question: question.trim(), expected_document_ids: expectedDocs });
-      if (error) throw new Error(error.message);
+      await addBenchmark({
+        data: { question: question.trim(), expectedDocumentIds: expectedDocs },
+      });
     },
     onSuccess: () => {
       setQuestion("");
@@ -88,8 +87,7 @@ function Evaluation() {
 
   const removeItem = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("benchmark_items").delete().eq("id", id);
-      if (error) throw new Error(error.message);
+      await removeBenchmark({ data: { id } });
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["benchmark"] }),
     onError: (error: Error) => toast.error(error.message),
