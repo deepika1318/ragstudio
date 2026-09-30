@@ -8,6 +8,13 @@
       "when": 1789790844633,
       "tag": "0000_ragstudio_core",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790742267176,
+      "tag": "0001_tighten_rls_read_only",
+      "breakpoints": true
     }
   ]
 }

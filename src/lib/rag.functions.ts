@@ -117,6 +117,34 @@ export const deleteDocument = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export const addBenchmarkItem = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) =>
+    z
+      .object({
+        question: z.string().min(5).max(2000),
+        expectedDocumentIds: z.array(z.string().uuid()).min(1).max(50),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("benchmark_items").insert({
+      question: data.question,
+      expected_document_ids: data.expectedDocumentIds,
+    });
+    if (error) throw new Error(`Could not add benchmark question: ${error.message}`);
+    return { ok: true };
+  });
+
+export const deleteBenchmarkItem = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ id: z.string().uuid() }).parse(data))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("benchmark_items").delete().eq("id", data.id);
+    if (error) throw new Error(`Could not remove benchmark question: ${error.message}`);
+    return { ok: true };
+  });
+
 /** Stages 4-6: retrieve -> (fuse -> rerank) -> answer with citations. */
 export const askQuestion = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => AskInput.parse(data))
